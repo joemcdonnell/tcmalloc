@@ -19,6 +19,9 @@
 #define TCMALLOC_SYSTEM_ALLOC_H_
 
 #include <asm/unistd.h>
+
+#include <atomic>
+
 #ifdef __linux__
 #include <linux/mempolicy.h>
 #endif
@@ -34,7 +37,9 @@
 #include "tcmalloc/experiment.h"
 #include "tcmalloc/experiment_config.h"
 #include "tcmalloc/internal/config.h"
+#include "tcmalloc/internal/environment.h"
 #include "tcmalloc/internal/exponential_biased.h"
+#include "tcmalloc/internal/logging.h"
 #include "tcmalloc/internal/memory_tag.h"
 #include "tcmalloc/internal/numa.h"
 #include "tcmalloc/internal/optimization.h"
@@ -180,6 +185,8 @@ class SystemAllocator {
   AddressRegion* selsan_region_ ABSL_GUARDED_BY(spinlock_){nullptr};
   AddressRegion* cold_region_ ABSL_GUARDED_BY(spinlock_){nullptr};
   AddressRegion* metadata_region_ ABSL_GUARDED_BY(spinlock_){nullptr};
+
+  static bool should_madvise_hugepage();
 
   class MmapRegion final : public AddressRegion {
    public:
@@ -335,6 +342,9 @@ std::pair<void*, size_t> SystemAllocator<Topology>::MmapRegion::Alloc(
     // This is only advisory, so ignore the error.
     ErrnoRestorer errno_restorer;
     (void)madvise(result_ptr, actual_size, MADV_NOHUGEPAGE);
+  } else if (should_madvise_hugepage()) {
+    ErrnoRestorer errno_restorer;
+    (void)madvise(result_ptr, actual_size, MADV_HUGEPAGE);
   }
   free_size_ -= actual_size;
   return {result_ptr, actual_size};
@@ -457,6 +467,27 @@ void* SystemAllocator<Topology>::MmapAligned(size_t size, size_t alignment,
                                              const MemoryTag tag) {
   AllocationGuardSpinLockHolder l(&spinlock_);
   return MmapAlignedLocked(size, alignment, tag);
+}
+
+template <typename Topology>
+bool SystemAllocator<Topology>::should_madvise_hugepage() {
+  ABSL_CONST_INIT static absl::once_flag flag;
+  ABSL_CONST_INIT static std::atomic<bool> enabled{true};
+  absl::base_internal::LowLevelCallOnce(&flag, [&]() {
+    const char* e = thread_safe_getenv("TCMALLOC_DISABLE_MADV_HUGEPAGE");
+    if (e) {
+      switch (e[0]) {
+        case '0':
+          break;
+        case '1':
+          enabled.store(false, std::memory_order_relaxed);
+          break;
+        default:
+          TC_BUG("bad env var '%s'", e);
+      }
+    }
+  });
+  return enabled.load(std::memory_order_relaxed);
 }
 
 template <typename Topology>
