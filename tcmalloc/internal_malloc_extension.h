@@ -61,14 +61,14 @@ class ProfileAccessor {
 
 extern "C" {
 
-ABSL_ATTRIBUTE_WEAK void TCMalloc_Internal_ForceCpuCacheActivation();
+void TCMalloc_Internal_ForceCpuCacheActivation();
 
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK tcmalloc::AddressRegionFactory*
+[[nodiscard]] tcmalloc::AddressRegionFactory*
 MallocExtension_Internal_GetRegionFactory();
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_SetRegionFactory(
+void MallocExtension_Internal_SetRegionFactory(
     tcmalloc::AddressRegionFactory* factory);
 
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK const
+[[nodiscard]] const
     tcmalloc::tcmalloc_internal::ProfileBase*
     MallocExtension_Internal_SnapshotCurrent(tcmalloc::ProfileType type);
 
@@ -82,78 +82,78 @@ ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_SetRegionFactory(
     tcmalloc::tcmalloc_internal::AllocationProfilingTokenBase*
     MallocExtension_Internal_StartEventTracing();
 
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_ActivateGuardedSampling();
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK tcmalloc::MallocExtension::Ownership
+void MallocExtension_Internal_ActivateGuardedSampling();
+[[nodiscard]] tcmalloc::MallocExtension::Ownership
 MallocExtension_Internal_GetOwnership(const void* ptr);
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK size_t
+[[nodiscard]] size_t
 MallocExtension_Internal_GetMemoryLimit(
     tcmalloc::MallocExtension::LimitKind limit_kind);
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK bool
+[[nodiscard]] bool
 MallocExtension_Internal_GetNumericProperty(const char* name_data,
                                             size_t name_size, size_t* value);
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK bool
+[[nodiscard]] bool
 MallocExtension_Internal_GetPerCpuCachesActive();
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK int32_t
+[[nodiscard]] int32_t
 MallocExtension_Internal_GetMaxPerCpuCacheSize();
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK bool
+[[nodiscard]] bool
 MallocExtension_Internal_GetBackgroundProcessActionsEnabled();
-ABSL_ATTRIBUTE_WEAK void
+void
 MallocExtension_Internal_GetBackgroundProcessSleepInterval(absl::Duration* ret);
-ABSL_ATTRIBUTE_WEAK void
+void
 MallocExtension_Internal_GetSkipSubreleaseShortInterval(absl::Duration* ret);
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_GetSkipSubreleaseLongInterval(
+void MallocExtension_Internal_GetSkipSubreleaseLongInterval(
     absl::Duration* ret);
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_GetProperties(
+void MallocExtension_Internal_GetProperties(
     tcmalloc::MallocExtension::PropertyMap* ret);
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_GetExperiments(
+void MallocExtension_Internal_GetExperiments(
     tcmalloc::MallocExtension::PropertyMap* ret);
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK bool MallocExtension_Internal_GetExperiment(
+[[nodiscard]] bool MallocExtension_Internal_GetExperiment(
     absl::string_view name, bool* active);
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_GetStats(std::string* ret);
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_SetMaxPerCpuCacheSize(
+void MallocExtension_Internal_GetStats(std::string* ret);
+void MallocExtension_Internal_SetMaxPerCpuCacheSize(
     int32_t value);
-ABSL_ATTRIBUTE_WEAK void
+void
 MallocExtension_Internal_SetBackgroundProcessActionsEnabled(bool value);
-ABSL_ATTRIBUTE_WEAK void
+void
 MallocExtension_Internal_SetBackgroundProcessSleepInterval(
     absl::Duration value);
-ABSL_ATTRIBUTE_WEAK void
+void
 MallocExtension_Internal_SetSkipSubreleaseShortInterval(absl::Duration value);
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_SetSkipSubreleaseLongInterval(
+void MallocExtension_Internal_SetSkipSubreleaseLongInterval(
     absl::Duration value);
-ABSL_ATTRIBUTE_WEAK size_t MallocExtension_Internal_ReleaseCpuMemory(int cpu);
-ABSL_ATTRIBUTE_WEAK size_t
+size_t MallocExtension_Internal_ReleaseCpuMemory(int cpu);
+size_t
 MallocExtension_Internal_ReleaseMemoryToSystem(size_t bytes);
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_SetMemoryLimit(
+void MallocExtension_Internal_SetMemoryLimit(
     size_t limit, tcmalloc::MallocExtension::LimitKind limit_kind);
 
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK size_t
+[[nodiscard]] size_t
 MallocExtension_Internal_GetAllocatedSize(const void* ptr);
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK size_t
+[[nodiscard]] size_t
 MallocExtension_Internal_GetEstimatedAllocatedSize(size_t size);
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_MarkThreadBusy();
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_MarkThreadIdle();
+void MallocExtension_Internal_MarkThreadBusy();
+void MallocExtension_Internal_MarkThreadIdle();
 
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK int64_t
+[[nodiscard]] int64_t
 MallocExtension_Internal_GetProfileSamplingInterval();
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_SetProfileSamplingInterval(
+void MallocExtension_Internal_SetProfileSamplingInterval(
     int64_t);
 
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_ProcessBackgroundActions();
+void MallocExtension_Internal_ProcessBackgroundActions();
 
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK tcmalloc::MallocExtension::BytesPerSecond
+[[nodiscard]] tcmalloc::MallocExtension::BytesPerSecond
 MallocExtension_Internal_GetBackgroundReleaseRate();
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_SetBackgroundReleaseRate(
+void MallocExtension_Internal_SetBackgroundReleaseRate(
     tcmalloc::MallocExtension::BytesPerSecond);
 
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK int64_t
+[[nodiscard]] int64_t
 MallocExtension_Internal_GetGuardedSamplingInterval();
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_SetGuardedSamplingInterval(
+void MallocExtension_Internal_SetGuardedSamplingInterval(
     int64_t);
 
-[[nodiscard]] ABSL_ATTRIBUTE_WEAK int64_t
+[[nodiscard]] int64_t
 MallocExtension_Internal_GetMaxTotalThreadCacheBytes();
-ABSL_ATTRIBUTE_WEAK void MallocExtension_Internal_SetMaxTotalThreadCacheBytes(
+void MallocExtension_Internal_SetMaxTotalThreadCacheBytes(
     int64_t value);
 }
 
